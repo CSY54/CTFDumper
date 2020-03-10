@@ -5,7 +5,8 @@ A tool for dumping CTFd challenges.
 ## Usage
 
 ```
-usage: CTFDumper.py [-h] [-u USERNAME] [-p PASSWORD] [-n] [-t TEMPLATE] [-v]
+usage: CTFDumper.py [-h] [-u USERNAME] [-p PASSWORD] [-n] [-f] [-t TEMPLATE]
+                    [-v]
                     url
 
 A tool for dumping CTFd challenges
@@ -21,6 +22,7 @@ optional arguments:
                         Platform password
   -n, --no-login        Use this option if the platform does not require
                         authentication
+  -f, --no-file         Don't download files
   -t TEMPLATE, --template TEMPLATE
                         Custom template path
   -v, --verbose         Verbose

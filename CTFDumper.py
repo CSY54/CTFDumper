@@ -61,6 +61,12 @@ def setup() -> None:
     )
 
     parser.add_argument(
+        '-f', '--no-file',
+        help='Don\'t download files',
+        action='store_true',
+    )
+
+    parser.add_argument(
         '-t', '--template',
         help='Custom template path',
     )
@@ -74,6 +80,7 @@ def setup() -> None:
     args = parser.parse_args()
 
     CONFIG['base_url'] = args.url
+    CONFIG['no_file'] = args.no_file
 
     if not args.no_login:
         CONFIG['username'] = args.username
@@ -157,6 +164,9 @@ def run() -> None:
         with open(os.path.join(filepath, 'README.md'), 'w+') as f:
             rendered = template.render(challenge=challenge)
             f.write(rendered)
+
+        if CONFIG['no_file']:
+            continue
 
         for filename in challenge['files']:
             clean_filename = os.path.basename(urlsplit(filename).path)
