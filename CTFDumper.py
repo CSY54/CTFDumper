@@ -137,6 +137,7 @@ def fetch(url: str) -> Union[List[dict], dict]:
 
 def fetch_file(filepath: str, filename: str, clean_filename: str) -> None:
     res = session.get(urljoin(CONFIG['base_url'], filename), stream=True)
+
     with open(os.path.join(filepath, clean_filename), 'wb') as f:
         f.write(res.content)
 
