@@ -5,8 +5,8 @@ A tool for dumping CTFd challenges.
 ## Usage
 
 ```
-usage: CTFDumper.py [-h] [-u USERNAME] [-p PASSWORD] [-n] [-f] [-t TEMPLATE]
-                    [-v]
+usage: CTFDumper.py [-h] [-u USERNAME] [-p PASSWORD] [--auth-file AUTH_FILE]
+                    [-n] [--no-file] [-t TEMPLATE] [-v]
                     url
 
 A tool for dumping CTFd challenges
@@ -20,9 +20,12 @@ optional arguments:
                         Platfrom username
   -p PASSWORD, --password PASSWORD
                         Platform password
+  --auth-file AUTH_FILE
+                        File containing username and password, seperated by
+                        newline
   -n, --no-login        Use this option if the platform does not require
                         authentication
-  -f, --no-file         Don't download files
+  --no-file             Don't download files
   -t TEMPLATE, --template TEMPLATE
                         Custom template path
   -v, --verbose         Verbose
@@ -50,4 +53,4 @@ value: 42
 
 ## Notes
 
-Store you `username` and `password` into a file and use ``python3 CTFDumper.py -u `cat username` -p `cat password` url`` is consider safe.
+Using `--auth-file` rather than typing your username/password in the command is consider safe.

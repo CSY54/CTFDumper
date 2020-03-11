@@ -13,6 +13,7 @@ CONFIG = {
     'username': None,
     'password': None,
     'base_url': None,
+    'no_login': None,
     'template': 'templates/default.md',
     'verbose': logging.INFO, 
 }
@@ -55,13 +56,18 @@ def setup() -> None:
     )
 
     parser.add_argument(
+        '--auth-file',
+        help='File containing username and password, seperated by newline',
+    )
+
+    parser.add_argument(
         '-n', '--no-login',
         help='Use this option if the platform does not require authentication',
         action='store_true',
     )
 
     parser.add_argument(
-        '-f', '--no-file',
+        '--no-file',
         help='Don\'t download files',
         action='store_true',
     )
@@ -81,10 +87,16 @@ def setup() -> None:
 
     CONFIG['base_url'] = args.url
     CONFIG['no_file'] = args.no_file
+    CONFIG['no_login'] = args.no_login
 
     if not args.no_login:
         CONFIG['username'] = args.username
         CONFIG['password'] = args.password
+
+    if args.auth_file:
+        with open(args.auth_file, 'r') as f:
+            CONFIG['username'] = f.readline().strip()
+            CONFIG['password'] = f.readline().strip()
 
     if args.verbose:
         CONFIG['verbose'] = logging.DEBUG
@@ -110,12 +122,15 @@ def get_nonce() -> str:
     return re.search('name="nonce" value="([0-9a-f]{64})"', res.text).group(1)
 
 def login() -> None:
+    nonce = get_nonce()
+    logger.debug(f'Nonce: {nonce}')
+
     res = session.post(
         urljoin(CONFIG['base_url'], '/login'),
         data={
             'name': CONFIG['username'],
             'password': CONFIG['password'],
-            'nonce': get_nonce(),
+            'nonce': nonce,
         }
     )
 
@@ -124,9 +139,11 @@ def login() -> None:
         exit(1)
 
 def logout() -> None:
+    logger.info('Done! Logging you out!')
     session.get(urljoin(CONFIG['base_url'], '/logout'))
 
 def fetch(url: str) -> Union[List[dict], dict]:
+    logger.debug(f'Fetching {url}')
     res = session.get(url)
 
     if not res.ok or not res.json()['success']:
@@ -136,12 +153,14 @@ def fetch(url: str) -> Union[List[dict], dict]:
     return res.json()['data']
 
 def fetch_file(filepath: str, filename: str, clean_filename: str) -> None:
+    logger.info(f'Downloading {clean_filename} into {filepath}')
     res = session.get(urljoin(CONFIG['base_url'], filename), stream=True)
 
     with open(os.path.join(filepath, clean_filename), 'wb') as f:
         f.write(res.content)
 
 def get_challenges() -> Generator[dict, None, None]:
+    logger.debug('Getting challenges')
     challenges = fetch(urljoin(CONFIG['base_url'], '/api/v1/challenges'))
 
     for challenge in challenges:
@@ -171,15 +190,18 @@ def run() -> None:
 
         for filename in challenge['files']:
             clean_filename = os.path.basename(urlsplit(filename).path)
-            logger.info(f'Downloading {clean_filename}')
             fetch_file(filepath, filename, clean_filename)
 
 def main() -> None:
     setup()
     welcome()
-    login()
-    run()
-    logout()
+    
+    if CONFIG['no_login']:
+        run()
+    else:
+        login()
+        run()
+        logout()
 
 if __name__ == '__main__':
     main()
