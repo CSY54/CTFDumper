@@ -13,9 +13,11 @@ CONFIG = {
     'username': None,
     'password': None,
     'base_url': None,
+    'no_file': None,
     'no_login': None,
     'template': 'templates/default.md',
     'verbose': logging.INFO, 
+    'blacklist': '[^a-zA-Z0-9_\-\. ]',
 }
 
 logging.config.dictConfig({
@@ -73,6 +75,12 @@ def setup() -> None:
     )
 
     parser.add_argument(
+        '--trust-all',
+        help='Will make directory as the name of the challenge, the slashes(/) character will automatically be replaced with underscores(_)',
+        action='store_true',
+    )
+
+    parser.add_argument(
         '-t', '--template',
         help='Custom template path',
     )
@@ -97,6 +105,9 @@ def setup() -> None:
         with open(args.auth_file, 'r') as f:
             CONFIG['username'] = f.readline().strip()
             CONFIG['password'] = f.readline().strip()
+
+    if args.trust_all:
+        CONFIG['blacklist'] = '/'
 
     if args.verbose:
         CONFIG['verbose'] = logging.DEBUG
@@ -171,8 +182,8 @@ def run() -> None:
     template = Template(open(CONFIG['template']).read())
 
     for challenge in get_challenges():
-        category = re.sub('[^a-zA-Z0-9_\-\. ]', '', challenge['category']).strip()
-        name = re.sub('[^a-zA-Z0-9_\-\. ]', '', challenge['name']).strip()
+        category = re.sub(CONFIG['blacklist'], '', challenge['category']).strip()
+        name = re.sub(CONFIG['blacklist'], '', challenge['name']).strip()
         logger.info(f'[{category}] {name}')
 
         filepath = os.path.join(hostname, category, name)
