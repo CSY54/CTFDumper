@@ -6,7 +6,7 @@ A tool for dumping CTFd challenges.
 
 ```
 usage: CTFDumper.py [-h] [-u USERNAME] [-p PASSWORD] [--auth-file AUTH_FILE]
-                    [-n] [--no-file] [-t TEMPLATE] [-v]
+                    [-n] [--no-file] [--trust-all] [-t TEMPLATE] [-v]
                     url
 
 A tool for dumping CTFd challenges
@@ -26,6 +26,9 @@ optional arguments:
   -n, --no-login        Use this option if the platform does not require
                         authentication
   --no-file             Don't download files
+  --trust-all           Will make directory as the name of the challenge, the
+                        slashes(/) character will automatically be replaced
+                        with underscores(_)
   -t TEMPLATE, --template TEMPLATE
                         Custom template path
   -v, --verbose         Verbose
@@ -53,4 +56,5 @@ value: 42
 
 ## Notes
 
-Using `--auth-file` rather than typing your username/password in the command is consider safe.
+- Using `--auth-file` rather than typing your username/password in the command is consider safe.
+- `--trust-all` allows non-ASCII characters to be the name of the directory.
