@@ -199,9 +199,10 @@ def run() -> None:
         if CONFIG['no_file']:
             continue
 
-        for filename in challenge['files']:
-            clean_filename = os.path.basename(urlsplit(filename).path)
-            fetch_file(filepath, filename, clean_filename)
+        if 'files' in challenge:
+            for filename in challenge['files']:
+                clean_filename = os.path.basename(urlsplit(filename).path)
+                fetch_file(filepath, filename, clean_filename)
 
 def main() -> None:
     setup()
