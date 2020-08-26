@@ -17,7 +17,7 @@ CONFIG = {
     'no_login': None,
     'template': 'templates/default.md',
     'verbose': logging.INFO,
-    'blacklist': '[^a-zA-Z0-9_\-\. ]',
+    'blacklist': r'[^a-zA-Z0-9_\-\. ]',
 }
 
 logging.config.dictConfig({
@@ -29,7 +29,7 @@ logger = logging.getLogger(__name__)
 session = Session()
 
 def welcome() -> None:
-    banner = '''
+    banner = r'''
   ____ _____ _____ ____
  / ___|_   _|  ___|  _ \ _   _ _ __ ___  _ __   ___ _ __
 | |     | | | |_  | | | | | | | '_ ` _ \| '_ \ / _ \ '__|
