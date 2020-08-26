@@ -23,7 +23,7 @@ CONFIG = {
     'base_url': None,
     'no_file': None,
     'no_login': None,
-    'template': 'templates/default.md',
+    'template': os.path.join(os.path.dirname(os.path.realpath(__file__)),'templates/default.md'),
     'verbose': logging.INFO,
     'blacklist': r'[^a-zA-Z0-9_\-\. ]',
 }
