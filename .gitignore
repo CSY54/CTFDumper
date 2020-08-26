@@ -1,2 +1,3 @@
 auth
-templates/mytemplate.md
+templates/*.md
+!templates/default.md
