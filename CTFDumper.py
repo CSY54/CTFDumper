@@ -1,4 +1,12 @@
 #!/usr/bin/env python3
+banner = r'''
+  ____ _____ _____ ____
+ / ___|_   _|  ___|  _ \ _   _ _ __ ___  _ __   ___ _ __
+| |     | | | |_  | | | | | | | '_ ` _ \| '_ \ / _ \ '__|
+| |___  | | |  _| | |_| | |_| | | | | | | |_) |  __/ |
+ \____| |_| |_|   |____/ \__,_|_| |_| |_| .__/ \___|_|
+                                        |_|
+'''
 from argparse import ArgumentParser
 from requests import Session
 from requests.compat import urljoin, urlparse, urlsplit
@@ -29,14 +37,6 @@ logger = logging.getLogger(__name__)
 session = Session()
 
 def welcome() -> None:
-    banner = r'''
-  ____ _____ _____ ____
- / ___|_   _|  ___|  _ \ _   _ _ __ ___  _ __   ___ _ __
-| |     | | | |_  | | | | | | | '_ ` _ \| '_ \ / _ \ '__|
-| |___  | | |  _| | |_| | |_| | | | | | | |_) |  __/ |
- \____| |_| |_|   |____/ \__,_|_| |_| |_| .__/ \___|_|
-                                        |_|
-'''
     logger.info(banner)
 
 def setup() -> None:
