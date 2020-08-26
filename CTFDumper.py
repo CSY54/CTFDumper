@@ -130,7 +130,7 @@ def get_nonce() -> str:
         urljoin(CONFIG['base_url'], '/login'),
     )
 
-    return re.search('name="nonce" value="([0-9a-f]{64})"', res.text).group(1)
+    return re.search('name="nonce"(?:[^<>]+)? value="([0-9a-f]{64})"', res.text).group(1)
 
 def login() -> None:
     nonce = get_nonce()
