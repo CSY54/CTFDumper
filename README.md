@@ -42,16 +42,16 @@ For [this challenge](https://demo.ctfd.io/challenges#Hej), the template below
 
 ```
 title: {{ challenge['name'] }}
-description: {{ challenge['description'] }}
 value: {{ challenge['value'] }}
+description: {{ challenge['description'] }}
 ```
 
 Will generate the following output
 
 ```
 title: Hej
-description: Hallo
 value: 42
+description: Hallo
 ```
 
 ## Notes
