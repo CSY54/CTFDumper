@@ -14,8 +14,7 @@ from typing import Generator, List, Union
 from jinja2 import Template
 import logging
 import logging.config
-import re
-import os
+import re, os
 
 CONFIG = {
     'username': None,
@@ -23,7 +22,7 @@ CONFIG = {
     'base_url': None,
     'no_file': None,
     'no_login': None,
-    'template': os.path.join(os.path.dirname(os.path.realpath(__file__)),'templates/default.md'),
+    'template': os.path.join(os.path.dirname(os.path.realpath(__file__)), 'templates/default.md'),
     'verbose': logging.INFO,
     'blacklist': r'[^a-zA-Z0-9_\-\. ]',
 }
@@ -126,11 +125,8 @@ def setup() -> None:
     logging.addLevelName(logging.DEBUG, '[*]')
 
 def get_nonce() -> str:
-    res = session.get(
-        urljoin(CONFIG['base_url'], '/login'),
-    )
-
-    return re.search('name="nonce"(?:[^<>]+)? value="([0-9a-f]{64})"', res.text).group(1)
+    res = session.get(urljoin(CONFIG['base_url'], '/login'))
+    return re.search('name="nonce"(?:[^<>]+)?value="([0-9a-f]{64})"', res.text).group(1)
 
 def login() -> None:
     nonce = get_nonce()
