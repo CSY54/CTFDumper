@@ -16,7 +16,7 @@ CONFIG = {
     'no_file': None,
     'no_login': None,
     'template': 'templates/default.md',
-    'verbose': logging.INFO, 
+    'verbose': logging.INFO,
     'blacklist': '[^a-zA-Z0-9_\-\. ]',
 }
 
@@ -46,7 +46,7 @@ def setup() -> None:
         'url',
         help='Platform URL',
     )
-    
+
     parser.add_argument(
         '-u', '--username',
         help='Platfrom username',
@@ -84,7 +84,7 @@ def setup() -> None:
         '-t', '--template',
         help='Custom template path',
     )
-    
+
     parser.add_argument(
         '-v', '--verbose',
         help='Verbose',
@@ -207,7 +207,7 @@ def run() -> None:
 def main() -> None:
     setup()
     welcome()
-    
+
     if CONFIG['no_login']:
         run()
     else:
