@@ -1,2 +1,2 @@
 #!/bin/sh
-./CTFDumper.py 'https://demo.ctfd.io' -n --no-file
+./CTFDumper.py 'https://demo.ctfd.io' -u 'user' -p 'password' --no-file
