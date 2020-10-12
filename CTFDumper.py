@@ -1,4 +1,12 @@
 #!/usr/bin/env python3
+banner = r'''
+  ____ _____ _____ ____
+ / ___|_   _|  ___|  _ \ _   _ _ __ ___  _ __   ___ _ __
+| |     | | | |_  | | | | | | | '_ ` _ \| '_ \ / _ \ '__|
+| |___  | | |  _| | |_| | |_| | | | | | | |_) |  __/ |
+ \____| |_| |_|   |____/ \__,_|_| |_| |_| .__/ \___|_|
+                                        |_|
+'''
 from argparse import ArgumentParser
 from requests import Session
 from requests.compat import urljoin, urlparse, urlsplit
@@ -6,8 +14,7 @@ from typing import Generator, List, Union
 from jinja2 import Template
 import logging
 import logging.config
-import re
-import os
+import re, os
 
 CONFIG = {
     'username': None,
@@ -15,9 +22,9 @@ CONFIG = {
     'base_url': None,
     'no_file': None,
     'no_login': None,
-    'template': 'templates/default.md',
-    'verbose': logging.INFO, 
-    'blacklist': '[^a-zA-Z0-9_\-\. ]',
+    'template': os.path.join(os.path.dirname(os.path.realpath(__file__)), 'templates/default.md'),
+    'verbose': logging.INFO,
+    'blacklist': r'[^a-zA-Z0-9_\-\. ]',
 }
 
 logging.config.dictConfig({
@@ -29,14 +36,6 @@ logger = logging.getLogger(__name__)
 session = Session()
 
 def welcome() -> None:
-    banner = '''
-  ____ _____ _____ ____
- / ___|_   _|  ___|  _ \ _   _ _ __ ___  _ __   ___ _ __
-| |     | | | |_  | | | | | | | '_ ` _ \| '_ \ / _ \ '__|
-| |___  | | |  _| | |_| | |_| | | | | | | |_) |  __/ |
- \____| |_| |_|   |____/ \__,_|_| |_| |_| .__/ \___|_|
-                                        |_|
-'''
     logger.info(banner)
 
 def setup() -> None:
@@ -46,7 +45,7 @@ def setup() -> None:
         'url',
         help='Platform URL',
     )
-    
+
     parser.add_argument(
         '-u', '--username',
         help='Platfrom username',
@@ -84,7 +83,7 @@ def setup() -> None:
         '-t', '--template',
         help='Custom template path',
     )
-    
+
     parser.add_argument(
         '-v', '--verbose',
         help='Verbose',
@@ -126,11 +125,8 @@ def setup() -> None:
     logging.addLevelName(logging.DEBUG, '[*]')
 
 def get_nonce() -> str:
-    res = session.get(
-        urljoin(CONFIG['base_url'], '/login'),
-    )
-
-    return re.search('name="nonce" value="([0-9a-f]{64})"', res.text).group(1)
+    res = session.get(urljoin(CONFIG['base_url'], '/login'))
+    return re.search('name="nonce"(?:[^<>]+)?value="([0-9a-f]{64})"', res.text).group(1)
 
 def login() -> None:
     nonce = get_nonce()
@@ -207,7 +203,7 @@ def run() -> None:
 def main() -> None:
     setup()
     welcome()
-    
+
     if CONFIG['no_login']:
         run()
     else:

@@ -1,4 +1,3 @@
 title: {{ challenge['name'] }}
-description: {{ challenge['description'] }}
 value: {{ challenge['value'] }}
-
+description: {{ challenge['description'] }}
