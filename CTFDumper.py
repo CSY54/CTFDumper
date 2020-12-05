@@ -19,6 +19,7 @@ import re, os
 CONFIG = {
     'username': None,
     'password': None,
+	'nonce_regex': 'name="nonce"(?:[^<>]+)?value="([0-9a-f]{64})"',
     'base_url': None,
     'no_file': None,
     'no_login': None,
@@ -54,6 +55,11 @@ def setup() -> None:
     parser.add_argument(
         '-p', '--password',
         help='Platform password',
+    )
+
+    parser.add_argument(
+        '--nonce-regex',
+        help='Platform nonce regex',
     )
 
     parser.add_argument(
@@ -100,6 +106,9 @@ def setup() -> None:
         CONFIG['username'] = args.username
         CONFIG['password'] = args.password
 
+    if args.nonce_regex:
+        CONFIG['nonce_regex'] = args.nonce_regex
+
     if args.auth_file:
         with open(args.auth_file, 'r') as f:
             CONFIG['username'] = f.readline().strip()
@@ -126,7 +135,7 @@ def setup() -> None:
 
 def get_nonce() -> str:
     res = session.get(urljoin(CONFIG['base_url'], '/login'))
-    return re.search('name="nonce"(?:[^<>]+)?value="([0-9a-f]{64})"', res.text).group(1)
+    return re.search(CONFIG['nonce_regex'], res.text).group(1)
 
 def login() -> None:
     nonce = get_nonce()
